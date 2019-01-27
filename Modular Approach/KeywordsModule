@@ -1,0 +1,56 @@
+Dim RadGrpObj As WebElements
+Dim RadioEle As WebElement
+Dim InputFile As WebElement
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function OpenUrl(driver As WebDriver, URL)
+    driver.Get URL
+    driver.Window.Maximize
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function EnterValue(driver As WebDriver)
+    'To check if an elements exists and enter value
+If driver.FindElementByName("firstname").IsEnabled = True Then
+    driver.FindElementByName("firstname").SendKeys "TestAutomation"
+End If
+
+'To run through a Radio Group and Select an Item
+Set RadGrpObj = driver.FindElementsByName("sex")
+For Each RadioEle In RadGrpObj
+   If RadioEle.Attribute("value") = "Male" Then
+    RadioEle.Click
+    Exit For
+   End If
+Next
+
+'To Upload a file in a WebPage
+'Set InputFile = driver.FindElementById("photo")
+'InputFile.SendKeys ("C:\Users\Admin\Desktop\File.png")
+
+'To Take a ScreenShot
+driver.TakeScreenshot.SaveAs (ActiveWorkbook.Path + "/screenshot.jpg")
+
+End Function
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+Function SearchTable(driver As WebDriver)
+Dim act As Actions
+'Iterating Through a Web Table and Searching for a String
+NoOfRows = driver.FindElementsByXPath("//*[@id='content']/table/tbody/tr").Count 'Find the no of rows
+For i = 1 To NoOfRows
+    For j = 1 To 6
+        ValueinCell = driver.FindElementByXPath("//*[@id='content']/table/tbody/tr[" & i & "]/td[" & j & "]").Text
+        If ValueinCell = "Taiwan" Then
+            Debug.Print driver.FindElementByXPath("//*[@id='content']/table/tbody/tr[" & i & "]/td[" & j + 1 & "]").Text
+            'Clicking on a ChildItem link within a table cell
+             driver.FindElementByXPath("//*[@id='content']/table/tbody/tr[" & i & "]/td[6]/a").Click
+             driver.Actions.MoveToElement(driver.FindElementByXPath("//*[@id='content']/table/tbody/tr[" & i & "]/td[6]/a")).Perform
+            ClickFlg = "1"
+            driver.TakeScreenshot.SaveAs (ActiveWorkbook.Path + "/screenshot2.jpg")
+            Exit For
+        End If
+    Next
+    If ClickFlg = "1" Then
+    Exit For
+    End If
+Next
+
+End Function
