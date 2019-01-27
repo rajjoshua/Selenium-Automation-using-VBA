@@ -13,7 +13,7 @@ driver.Start
 driver.Get "https://www.toolsqa.com/automation-practice-form/"
 driver.Window.Maximize
 
-'To check if an elements exists and enter value
+'To check if an element exists and enter value
 If driver.FindElementByName("firstname").IsEnabled = True Then
     driver.FindElementByName("firstname").SendKeys "TestAutomation"
 End If
