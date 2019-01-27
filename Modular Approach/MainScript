@@ -1,1 +1,18 @@
 
+Function Main()
+
+Dim driver As New WebDriver
+
+Set driver = CreateObject("Selenium.chromedriver")
+driver.SetCapability "ignoreZoomSetting", True
+
+URL1 = "https://www.toolsqa.com/automation-practice-form/"
+URL2 = "https://www.toolsqa.com/automation-practice-table/"
+
+Call OpenUrl(driver, URL1)
+Call EnterValue(driver)
+
+Call OpenUrl(driver, URL2)
+Call SearchTable(driver)
+
+End Function
