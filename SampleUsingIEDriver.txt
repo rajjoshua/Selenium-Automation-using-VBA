@@ -1,0 +1,27 @@
+Function SeleniumWrapperCheckIE()
+
+Dim driver As New WebDriver
+Dim RadGrpObj As WebElements
+Dim RadioEle As WebElement
+Set driver = CreateObject("Selenium.ieDriver")
+driver.SetCapability "ignoreZoomSetting", True
+driver.Start
+driver.Get "https://www.clrtp.com/"
+driver.Window.Maximize
+
+Set ListObj = driver.FindElementByXPath("//*[@id='Adults']").AsSelect '.SelectByText
+ListObj.SelectByText "7"
+
+
+Set RadGrpObj = driver.FindElementsByName("trip_type")
+For Each RadioEle In RadGrpObj
+   If RadioEle.Attribute("value") = "RoundTrip" Then
+    RadioEle.Click
+    Exit For
+   End If
+Next
+
+driver.TakeScreenshot.SaveAs (ActiveWorkbook.Path + "/screenshot.jpg")
+MsgBox "End"
+
+End Function
