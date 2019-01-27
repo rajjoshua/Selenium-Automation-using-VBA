@@ -9,3 +9,5 @@ Steps to Follow:
 2) Open an Excel VBA Project Module and Check "Selenium Library Type" in Reference section under Tools.
 3) Now you are all setup to start your Selenium Scripting.
 4) Refer my sample code section to get a hands-on.
+
+**Added Modular Approach**
