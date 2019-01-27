@@ -4,7 +4,7 @@ Dim driver As New WebDriver
 Dim RadGrpObj As WebElements
 Dim RadioEle As WebElement
 Set driver = CreateObject("Selenium.ieDriver")
-driver.SetCapability "ignoreZoomSetting", True
+driver.SetCapability "ignoreZoomSetting", True 'This is to avoid browser zoom size error
 driver.Start
 driver.Get "https://www.clrtp.com/"
 driver.Window.Maximize
