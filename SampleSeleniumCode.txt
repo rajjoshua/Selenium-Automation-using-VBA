@@ -1,0 +1,56 @@
+Function SeleniumWrapperDemo()
+
+Dim driver As New WebDriver
+Dim RadGrpObj As WebElements
+Dim RadioEle As WebElement
+Dim InputFile As WebElement
+
+'Initialize WebDriver for Chrome
+Set driver = CreateObject("Selenium.ChromeDriver")
+driver.Start
+
+'Navigate to URL
+driver.Get "https://www.toolsqa.com/automation-practice-form/"
+driver.Window.Maximize
+
+'To check if an elements exists and enter value
+If driver.FindElementByName("firstname").IsEnabled = True Then
+    driver.FindElementByName("firstname").SendKeys "TestAutomation"
+End If
+
+'To run through a Radio Group and Select an Item
+Set RadGrpObj = driver.FindElementsByName("sex")
+For Each RadioEle In RadGrpObj
+   If RadioEle.Attribute("value") = "Male" Then
+    RadioEle.Click
+    Exit For
+   End If
+Next
+
+'To Upload a file in a WebPage
+Set InputFile = driver.FindElementById("photo")
+InputFile.SendKeys ("C:\Users\Admin\Desktop\File.png")
+
+'To Take a ScreenShot
+driver.TakeScreenshot.SaveAs (ActiveWorkbook.Path + "/screenshot.jpg")
+
+'Navigate to another URl
+driver.Get "https://www.toolsqa.com/automation-practice-table/"
+
+'Iterating Through a Web Table and Searching for a String
+NoOfRows = driver.FindElementsByXPath("//*[@id='content']/table/tbody/tr").Count 'Find the no of rows
+For i = 1 To NoOfRows
+    For j = 1 To 6
+        ValueinCell = driver.FindElementByXPath("//*[@id='content']/table/tbody/tr[" & i & "]/td[" & j & "]").Text
+        If ValueinCell = "Taiwan" Then
+            Debug.Print driver.FindElementByXPath("//*[@id='content']/table/tbody/tr[" & i & "]/td[" & j + 1 & "]").Text
+            'Clicking on a ChildItem link within a table cell
+             driver.FindElementByXPath("//*[@id='content']/table/tbody/tr[" & i & "]/td[6]/a").Click
+            Exit For
+        End If
+    Next
+Next
+
+MsgBox "End Of Test"
+
+End Function
