@@ -24,7 +24,7 @@ Next
 
 'To Upload a file in a WebPage
 'Set InputFile = driver.FindElementById("photo")
-'InputFile.SendKeys ("C:\Users\Admin\Desktop\File.png")
+'InputFile.SendKeys ("C:\Users\Josh\Desktop\File.png")
 
 'To Take a ScreenShot
 driver.TakeScreenshot.SaveAs (ActiveWorkbook.Path + "/screenshot.jpg")
