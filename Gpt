@@ -1,0 +1,33 @@
+import openai
+import pandas as pd
+
+# Set your OpenAI API key
+openai.api_key = 'your-api-key'
+
+# Read data from all sheets in Excel file
+def read_excel(file_path):
+    excel_data = {}
+    xls = pd.ExcelFile(file_path)
+    for sheet_name in xls.sheet_names:
+        excel_data[sheet_name] = xls.parse(sheet_name)
+    return excel_data
+
+# Define the function to interact with ChatGPT
+def chat_with_gpt(prompt, data):
+    response = openai.ChatCompletion.create(
+        model="text-davinci-002",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    return response['choices'][0]['message']['content']
+
+# Example usage
+file_path = 'your-excel-file.xlsx'
+excel_data = read_excel(file_path)
+
+user_input = input("You: ")
+response = chat_with_gpt(user_input, excel_data)
+
+print("ChatGPT:", response)
