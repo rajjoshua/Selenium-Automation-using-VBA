@@ -1,0 +1,75 @@
+import os
+from openpyxl import load_workbook
+from PIL import Image
+import pytesseract
+import pandas as pd
+
+# Function to extract text from an image using pytesseract
+def extract_text_from_image(image_path):
+    img = Image.open(image_path)
+    gray_img = img.convert('L')  # Convert image to grayscale
+    text = pytesseract.image_to_string(gray_img)
+    return text
+
+# Function to search for string in Excel file
+def search_excel_for_string(excel_file_path, search_string):
+    found_files = []
+    workbook = load_workbook(filename=excel_file_path, read_only=True)
+    for sheet_name in workbook.sheetnames:
+        sheet = workbook[sheet_name]
+        for row in sheet.iter_rows():
+            for cell in row:
+                if cell.data_type == 's' and search_string in str(cell.value):
+                    found_files.append(excel_file_path)
+                    break
+            else:
+                continue
+            break  # Break outer loop if string is found in the Excel file
+    return found_files
+
+# Function to search for string in files within a directory
+def search_files_in_directory(directory, search_string):
+    found_files = []
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root, file)
+            if file.lower().endswith('.xlsx') or file.lower().endswith('.xls'):
+                found_files.extend(search_excel_for_string(file_path, search_string))
+            elif file.lower().endswith(('.png', '.jpg', '.jpeg')):
+                extracted_text = extract_text_from_image(file_path)
+                if search_string in extracted_text:
+                    found_files.append(file_path)
+            else:
+                try:
+                    with open(file_path, 'r', encoding='utf-8') as f:
+                        file_contents = f.read()
+                        if search_string in file_contents:
+                            found_files.append(file_path)
+                except UnicodeDecodeError:
+                    continue  # Skip files that cannot be decoded
+    return found_files
+
+# Main function to search for string in all files within a directory and its subdirectories
+def search_directory_recursive(start_directory, search_string):
+    found_files = search_files_in_directory(start_directory, search_string)
+    return found_files
+
+# Search for the specified string in files within a directory and its subdirectories
+start_directory = r'path_to_start_directory'
+search_string = "India"
+
+found_files = search_directory_recursive(start_directory, search_string)
+
+# Create a DataFrame to store the results
+data = {'File Name': [], 'File Path': []}
+for file_path in found_files:
+    file_name = os.path.basename(file_path)
+    data['File Name'].append(file_name)
+    data['File Path'].append(file_path)
+
+# Convert the DataFrame to an Excel file
+report_df = pd.DataFrame(data)
+report_file_path = r'report_files_containing_string.xlsx'
+report_df.to_excel(report_file_path, index=False)
+
+print(f"Search completed. Results saved to: {report_file_path}")
